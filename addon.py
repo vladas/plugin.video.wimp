@@ -2,6 +2,12 @@ import os
 from xbmcswift import Plugin, xbmcplugin, xbmcgui
 import resources.lib.scraper as scraper
 
+try:
+    import StorageServer
+except:
+    import storageserverdummy as StorageServer
+    
+cache = StorageServer.StorageServer("plugin.video.wimp", 24) # (Your plugin name, Cache time in hours)
 
 class Plugin_adv(Plugin):
 
@@ -54,7 +60,8 @@ def show_root():
 @plugin.route('/current/')
 def show_current():
     log('show_current started')
-    videos = scraper.get_current_videos()
+    #videos = scraper.get_current_videos()
+    videos = cache.cacheFunction(scraper.get_current_videos)
     return __add_videos(videos)
 
 
